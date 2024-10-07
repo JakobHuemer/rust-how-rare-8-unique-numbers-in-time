@@ -1,0 +1,6 @@
+[package]
+name = "how-rare-8-unique-numbers-in-time"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
