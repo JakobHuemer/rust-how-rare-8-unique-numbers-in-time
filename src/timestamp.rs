@@ -5,6 +5,7 @@ pub struct Timestamp {
     seconds: u32,
     minutes: u32,
     hours: u32,
+    set: HashSet<u32>,
 }
 
 impl Timestamp {
@@ -14,6 +15,7 @@ impl Timestamp {
             seconds: 0,
             minutes: 0,
             hours: 0,
+            set: HashSet::new(),
         }
     }
 
@@ -62,8 +64,8 @@ impl Timestamp {
                 self.centiseconds)
     }
 
-    pub fn is_unique(&self) -> bool {
-        let mut set: HashSet<u32> = HashSet::new();
+    pub fn is_unique(&mut self) -> bool {
+        self.set.clear();
 
         let first_hours = self.hours / 10;
         let second_hours = self.hours - first_hours * 10;
@@ -77,14 +79,14 @@ impl Timestamp {
         let first_centiseconds = self.centiseconds / 10;
         let second_centiseconds = self.centiseconds - first_centiseconds * 10;
 
-        set.insert(first_hours);
-        set.insert(second_hours);
-        set.insert(first_minutes);
-        set.insert(second_minutes);
-        set.insert(first_seconds);
-        set.insert(second_seconds);
-        set.insert(first_centiseconds);
-        set.insert(second_centiseconds);
+        self.set.insert(first_hours);
+        self.set.insert(second_hours);
+        self.set.insert(first_minutes);
+        self.set.insert(second_minutes);
+        self.set.insert(first_seconds);
+        self.set.insert(second_seconds);
+        self.set.insert(first_centiseconds);
+        self.set.insert(second_centiseconds);
 
         // println!("{}", set.len());
         //
@@ -95,6 +97,6 @@ impl Timestamp {
         //          first_centiseconds, second_centiseconds
         // );
 
-        set.len() == 8
+        self.set.len() == 8
     }
 }
