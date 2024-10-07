@@ -5,12 +5,16 @@ use std::collections::HashSet;
 // - not unique: 35395200
 // - percentage: 1.68 %
 
+// second up to 2 hours
+// - unique: 33600
+// - not unique: 686400
+// - percentage: 4.666....
+
 pub struct Timestamp {
     centiseconds: u32,
     seconds: u32,
     minutes: u32,
     hours: u32,
-    set: HashSet<u32>,
 }
 
 impl Timestamp {
@@ -20,7 +24,6 @@ impl Timestamp {
             seconds: 0,
             minutes: 0,
             hours: 0,
-            set: HashSet::new(),
         }
     }
 
@@ -50,7 +53,7 @@ impl Timestamp {
                     println!("Hours: {}", self.hours);
                     self.minutes = 0;
                     self.hours += 1;
-                    if (self.hours >= 100) {
+                    if (self.hours >= 2) {
                         return false;
                     }
                 }
@@ -69,8 +72,7 @@ impl Timestamp {
                 self.centiseconds)
     }
 
-    pub fn is_unique(&mut self) -> bool {
-        self.set.clear();
+    pub fn is_unique(&self) -> bool {
 
         let first_hours = self.hours / 10;
         let second_hours = self.hours - first_hours * 10;
@@ -84,17 +86,9 @@ impl Timestamp {
         let first_centiseconds = self.centiseconds / 10;
         let second_centiseconds = self.centiseconds - first_centiseconds * 10;
 
-        // self.set.insert(first_hours);
-        // self.set.insert(second_hours);
-        // self.set.insert(first_minutes);
-        // self.set.insert(second_minutes);
-        // self.set.insert(first_seconds);
-        // self.set.insert(second_seconds);
-        // self.set.insert(first_centiseconds);
-        // self.set.insert(second_centiseconds);
 
-        let unique_mask: u16 = (1 << first_hours) |
-            (1 << second_hours) |
+        let unique_mask: u16 = (1 << second_hours) |
+            // (1 << first_hours) |
             (1 << first_minutes) |
             (1 << second_minutes) |
             (1 << first_seconds) |
@@ -103,18 +97,8 @@ impl Timestamp {
             (1 << second_centiseconds);
 
         // Count bits set to 1 using built-in function
-        let is_unique = unique_mask.count_ones() == 8;
+        let is_unique = unique_mask.count_ones() == 7;
 
-        // println!("{}", set.len());
-        //
-        // println!("{},{}:{},{}:{},{}:{},{}",
-        //          first_hours, second_hours,
-        //          first_minutes, second_minutes,
-        //          first_seconds, second_seconds,
-        //          first_centiseconds, second_centiseconds
-        // );
-
-        self.set.len() == 8;
         is_unique
 
     }
