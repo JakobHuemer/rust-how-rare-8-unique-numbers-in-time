@@ -1,5 +1,10 @@
 use std::collections::HashSet;
 
+// first iteration:
+// - unique: 604800
+// - not unique: 35395200
+// - percentage: 1.68 %
+
 pub struct Timestamp {
     centiseconds: u32,
     seconds: u32,
@@ -79,14 +84,26 @@ impl Timestamp {
         let first_centiseconds = self.centiseconds / 10;
         let second_centiseconds = self.centiseconds - first_centiseconds * 10;
 
-        self.set.insert(first_hours);
-        self.set.insert(second_hours);
-        self.set.insert(first_minutes);
-        self.set.insert(second_minutes);
-        self.set.insert(first_seconds);
-        self.set.insert(second_seconds);
-        self.set.insert(first_centiseconds);
-        self.set.insert(second_centiseconds);
+        // self.set.insert(first_hours);
+        // self.set.insert(second_hours);
+        // self.set.insert(first_minutes);
+        // self.set.insert(second_minutes);
+        // self.set.insert(first_seconds);
+        // self.set.insert(second_seconds);
+        // self.set.insert(first_centiseconds);
+        // self.set.insert(second_centiseconds);
+
+        let unique_mask: u16 = (1 << first_hours) |
+            (1 << second_hours) |
+            (1 << first_minutes) |
+            (1 << second_minutes) |
+            (1 << first_seconds) |
+            (1 << second_seconds) |
+            (1 << first_centiseconds) |
+            (1 << second_centiseconds);
+
+        // Count bits set to 1 using built-in function
+        let is_unique = unique_mask.count_ones() == 8;
 
         // println!("{}", set.len());
         //
@@ -97,6 +114,8 @@ impl Timestamp {
         //          first_centiseconds, second_centiseconds
         // );
 
-        self.set.len() == 8
+        self.set.len() == 8;
+        is_unique
+
     }
 }
